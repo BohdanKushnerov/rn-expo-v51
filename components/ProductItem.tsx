@@ -1,12 +1,10 @@
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text } from "react-native";
 import { Link } from "expo-router";
-import { Product } from "@/interfaces/Product";
-
-const defaultPizzaImage =
-  "https://prajo.eu/8773-large_default/deska-do-pizzy-bambus-o35cm-kinghoff.jpg";
+import { IProduct } from "@/interfaces/IProduct";
+import { defaultPizzaImage } from "@/assets/data/defaultPizzaImage";
 
 interface IProductItemProps {
-  product: Product;
+  product: IProduct;
 }
 
 export default function ProductItem({ product }: IProductItemProps) {
@@ -19,7 +17,6 @@ export default function ProductItem({ product }: IProductItemProps) {
         />
         <Text style={styles.title}>{product.name}</Text>
         <Text style={styles.title}>Price: ${product.price}</Text>
-        {/* <Link href={"/product"}>Go to product details</Link> */}
       </Pressable>
     </Link>
   );
