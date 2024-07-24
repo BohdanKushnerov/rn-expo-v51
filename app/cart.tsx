@@ -9,14 +9,14 @@ export default function CartScreen() {
   const { items, total } = useCart();
 
   return (
-    <View>
+    <View style={{ padding: 10 }}>
       <FlatList
         data={items}
         renderItem={({ item }) => <CartListItem cartItem={item} />}
-        contentContainerStyle={{ padding: 10, gap: 10 }}
+        contentContainerStyle={{ gap: 10 }}
       />
 
-      <Text style={styles.total}>Total: {total}</Text>
+      <Text style={styles.total}>Total: ${total}</Text>
 
       <Button text="Checkout" />
 
@@ -28,7 +28,7 @@ export default function CartScreen() {
 const styles = StyleSheet.create({
   total: {
     marginTop: 20,
-    padding: 20,
+    fontSize: 20,
     fontWeight: "500",
   },
 });
