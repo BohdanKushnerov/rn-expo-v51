@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 
 const now = dayjs();
 
-const orders: IOrder[] = [
+export const orders: IOrder[] = [
   {
     id: 23123,
     created_at: now.subtract(1, "hour").toISOString(),
@@ -82,5 +82,3 @@ const orders: IOrder[] = [
     ],
   },
 ];
-
-export default orders;

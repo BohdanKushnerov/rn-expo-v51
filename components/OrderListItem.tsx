@@ -13,8 +13,6 @@ interface IOrderListItemProps {
 export default function OrderListItem({ order }: IOrderListItemProps) {
   const segments = useSegments();
 
-  console.log(segments);
-
   return (
     <Link href={`${segments[0]}/orders/${order.id}`} asChild>
       <Pressable style={styles.container}>
