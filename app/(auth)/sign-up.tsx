@@ -1,15 +1,26 @@
-import { View, Text, StyleSheet, TextInput } from "react-native";
+import { View, Text, StyleSheet, TextInput, Alert } from "react-native";
 import { useState } from "react";
 import Button from "@/components/Button";
 import { Colors } from "@/constants/Colors";
 import { Stack, useRouter } from "expo-router";
+import { supabase } from "@/lib/supabase";
 
 export default function signUn() {
-  const [errors, setErrors] = useState();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const onSubmit = () => {};
-  //
+  const onSubmit = async () => {
+    setLoading(true);
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+
+    if (error) Alert.alert(error.message);
+    setLoading(false);
+  };
 
   return (
     <View style={styles.container}>
@@ -17,24 +28,26 @@ export default function signUn() {
 
       <Text style={styles.label}>Email</Text>
       <TextInput
-        // value={name}
-        // onChangeText={setName}
+        value={email}
+        onChangeText={setEmail}
         placeholder="jon@gmail.com"
         style={styles.input}
       />
 
       <Text style={styles.label}>Password</Text>
       <TextInput
-        // value={price}
-        // onChangeText={setPrice}
+        value={password}
+        onChangeText={setPassword}
         secureTextEntry={true}
         style={styles.input}
         keyboardType="numeric"
       />
 
-      <Text style={{ color: "red" }}>{errors}</Text>
-
-      <Button onPress={onSubmit} text="Create account" />
+      <Button
+        disabled={loading}
+        onPress={onSubmit}
+        text={loading ? "Creating account..." : "Create account"}
+      />
 
       <Text onPress={() => router.push("/sign-in")} style={styles.textButton}>
         Sign In
