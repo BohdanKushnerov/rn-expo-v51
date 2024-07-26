@@ -1,13 +1,12 @@
 import { ICartItem } from "@/interfaces/ICartItem";
-import { IProduct } from "@/interfaces/IProduct";
 import { PizzaSize } from "@/types/PizzaSize";
 import { createContext, PropsWithChildren, useContext, useState } from "react";
 import { randomUUID } from "expo-crypto";
+import { Product } from "@/types/Product";
 
 interface ICartContext {
   items: ICartItem[];
-  // addItem: (product: IProduct, size: Pick<ICartItem, "size">) => void;
-  addItem: (product: IProduct, size: PizzaSize) => void;
+  addItem: (product: Product, size: PizzaSize) => void;
   updateQuantity: (itemID: string, amount: -1 | 1) => void;
   total: number;
 }
@@ -22,7 +21,7 @@ const CartContext = createContext<ICartContext>({
 export default function CartProvider({ children }: PropsWithChildren) {
   const [items, setItems] = useState<ICartItem[]>([]);
 
-  const addItem = (product: IProduct, size: PizzaSize) => {
+  const addItem = (product: Product, size: PizzaSize) => {
     const existingItem = items.find(
       (item) => item.product.name === product.name && item.size === size
     );

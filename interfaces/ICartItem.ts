@@ -1,9 +1,9 @@
 import { PizzaSize } from "@/types/PizzaSize";
-import { IProduct } from "./IProduct";
+import { Product } from "@/types/Product";
 
 export interface ICartItem {
   id: string;
-  product: IProduct;
+  product: Product;
   product_id: number;
   size: PizzaSize;
   quantity: number;

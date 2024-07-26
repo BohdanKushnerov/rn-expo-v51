@@ -7,22 +7,13 @@ import {
 } from "react";
 import { supabase } from "@/lib/supabase";
 import { Session } from "@supabase/supabase-js";
+import { Tables } from "@/database.types";
 
 interface IAuthData {
   session: Session | null;
   loading: boolean;
   profile: any;
   isAdmin: boolean;
-}
-
-interface IProfile {
-  avatar_url: string | null;
-  full_name: string | null;
-  group: "USER" | "ADMIN";
-  id: string;
-  updated_at: string | null;
-  username: string | null;
-  website: string | null;
 }
 
 const AuthContext = createContext<IAuthData>({
@@ -34,7 +25,7 @@ const AuthContext = createContext<IAuthData>({
 
 export default function AuthProvider({ children }: PropsWithChildren) {
   const [session, setSession] = useState<Session | null>(null);
-  const [profile, setProfile] = useState<IProfile | null>(null);
+  const [profile, setProfile] = useState<Tables<"profiles"> | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -50,6 +41,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
           .select("*")
           .eq("id", session.user.id)
           .single();
+
         setProfile(data || null);
       }
 

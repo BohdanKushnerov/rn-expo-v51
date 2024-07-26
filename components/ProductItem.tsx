@@ -1,10 +1,10 @@
 import { Image, Pressable, StyleSheet, Text } from "react-native";
 import { Link, useSegments } from "expo-router";
-import { IProduct } from "@/interfaces/IProduct";
 import { defaultPizzaImage } from "@/assets/data/defaultPizzaImage";
+import { Product } from "@/types/Product";
 
 interface IProductItemProps {
-  product: IProduct;
+  product: Product;
 }
 
 export default function ProductItem({ product }: IProductItemProps) {
