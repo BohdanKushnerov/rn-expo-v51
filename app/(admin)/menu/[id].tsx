@@ -15,17 +15,25 @@ import {
   Pressable,
   ScrollView,
   useColorScheme,
+  ActivityIndicator,
 } from "react-native";
 import { Colors } from "@/constants/Colors";
+import { useProduct } from "@/api/products";
 
 export default function ProductDetailsScreen() {
+  const { id: idString } = useLocalSearchParams();
+
+  if (!idString) {
+    return <Text>Invalid product ID</Text>;
+  }
+
+  const id = parseFloat(typeof idString === "string" ? idString : idString[0]);
+
+  const { data: product, error, isLoading } = useProduct(id);
   const [selectedSize, setSelectedSize] = useState<PizzaSize>("M");
-  const { id } = useLocalSearchParams();
   const { addItem } = useCart();
   const router = useRouter();
   const colorScheme = useColorScheme();
-
-  const product = products.find((product) => product.id.toString() === id);
 
   const addToCard = () => {
     if (!product) {
@@ -38,6 +46,14 @@ export default function ProductDetailsScreen() {
 
   if (!product) {
     return <Text>Product not found</Text>;
+  }
+
+  if (isLoading) {
+    return <ActivityIndicator />;
+  }
+
+  if (error) {
+    return <Text>Failed to fetch products</Text>;
   }
 
   return (

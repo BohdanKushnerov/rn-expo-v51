@@ -1,4 +1,3 @@
-import { products } from "@/assets/data/products";
 import Button from "@/components/Button";
 import { defaultPizzaImage } from "@/assets/data/defaultPizzaImage";
 import { pizzaSizes } from "@/constants/pizzaSizes";
@@ -13,27 +12,38 @@ import {
   StyleSheet,
   Pressable,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
+import { useProduct } from "@/api/products";
 
 export default function ProductDetailsScreen() {
+  const { id: idString } = useLocalSearchParams();
+
+  if (!idString) {
+    return <Text>Invalid product ID</Text>;
+  }
+
+  const id = parseFloat(typeof idString === "string" ? idString : idString[0]);
+
+  const { data: product, error, isLoading } = useProduct(id);
   const [selectedSize, setSelectedSize] = useState<PizzaSize>("M");
-  const { id } = useLocalSearchParams();
   const { addItem } = useCart();
   const router = useRouter();
-
-  const product = products.find((product) => product.id.toString() === id);
 
   const addToCard = () => {
     if (!product) {
       return;
     }
-    // console.warn("Adding to card, size: ", selectedSize);
     addItem(product, selectedSize);
     router.push("/cart");
   };
 
-  if (!product) {
-    return <Text>Product not found</Text>;
+  if (isLoading) {
+    return <ActivityIndicator />;
+  }
+
+  if (error) {
+    return <Text>Failed to fetch products</Text>;
   }
 
   return (

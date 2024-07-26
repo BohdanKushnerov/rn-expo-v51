@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
-  View,
   Text,
   StyleSheet,
   TextInput,
@@ -12,18 +11,41 @@ import * as ImagePicker from "expo-image-picker";
 import Button from "@/components/Button";
 import { Colors } from "@/constants/Colors";
 import { defaultPizzaImage } from "@/assets/data/defaultPizzaImage";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import {
+  useDeleteProduct,
+  useInsertProduct,
+  useProduct,
+  useUpdateProduct,
+} from "@/api/products";
 
 export default function CreateProductScreen() {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [errors, setErrors] = useState("");
   const [image, setImage] = useState<string | null>(null);
-  const { id } = useLocalSearchParams();
-  const isUpdating = !!id;
+  const { id: idString = "" } = useLocalSearchParams();
+  const isUpdating = !!idString;
+  const router = useRouter();
+
+  const id = parseFloat(typeof idString === "string" ? idString : idString[0]);
+
+  const { mutate: insertProduct, isPending: isInserting } = useInsertProduct();
+  const { mutate: updateProduct, isPending: isUpdatingProduct } =
+    useUpdateProduct();
+  const { data: updatingProduct } = useProduct(id);
+  const { mutate: deleteProduct, isPending: isDeletingProduct } =
+    useDeleteProduct();
+
+  useEffect(() => {
+    if (updatingProduct) {
+      setName(updatingProduct.name);
+      setPrice(updatingProduct.price.toString());
+      setImage(updatingProduct.image);
+    }
+  }, [updatingProduct]);
 
   const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -73,9 +95,15 @@ export default function CreateProductScreen() {
       return;
     }
 
-    console.warn("Create new product");
-
-    resetFields();
+    insertProduct(
+      { name, price: parseFloat(price), image },
+      {
+        onSuccess() {
+          resetFields();
+          router.back();
+        },
+      }
+    );
   };
 
   const onUpdate = () => {
@@ -83,13 +111,24 @@ export default function CreateProductScreen() {
       return;
     }
 
-    console.warn("Update product");
-
-    resetFields();
+    updateProduct(
+      { id, name, price: parseFloat(price), image },
+      {
+        onSuccess() {
+          resetFields();
+          router.back();
+        },
+      }
+    );
   };
 
   const onDelete = () => {
-    console.warn("DELETE!!!");
+    deleteProduct(id, {
+      onSuccess: () => {
+        resetFields();
+        router.replace("/(admin)");
+      },
+    });
   };
 
   const confirmDelete = () => {
@@ -135,10 +174,27 @@ export default function CreateProductScreen() {
 
       <Text style={{ color: "red" }}>{errors}</Text>
 
-      <Button onPress={onSubmit} text={isUpdating ? "Update" : "Create"} />
+      {!isUpdating && (
+        <Button
+          onPress={onSubmit}
+          text={isInserting ? "Creating" : "Create"}
+          disabled={isInserting}
+        />
+      )}
       {isUpdating && (
-        <Text onPress={confirmDelete} style={styles.textButton}>
-          Delete
+        <Button
+          onPress={onSubmit}
+          text={isUpdatingProduct ? "Updating" : "Update"}
+          disabled={isUpdatingProduct}
+        />
+      )}
+      {isUpdating && (
+        <Text
+          style={styles.textButton}
+          onPress={confirmDelete}
+          disabled={isDeletingProduct}
+        >
+          {isDeletingProduct ? "Deleting" : "Delete"}
         </Text>
       )}
     </ScrollView>

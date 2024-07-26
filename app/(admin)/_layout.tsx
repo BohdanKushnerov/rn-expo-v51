@@ -18,8 +18,6 @@ export default function TabLayout() {
   const colorScheme = useColorScheme();
   const { isAdmin } = useAuth();
 
-  console.log("isAdmin app admin", isAdmin);
-
   if (!isAdmin) {
     return <Redirect href={"/"} />;
   }
