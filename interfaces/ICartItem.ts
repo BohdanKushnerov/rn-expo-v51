@@ -3,7 +3,7 @@ import { Product } from "@/types/Product";
 
 export interface ICartItem {
   id: string;
-  products: Product;
+  product: Product;
   product_id: number;
   size: PizzaSize;
   quantity: number;

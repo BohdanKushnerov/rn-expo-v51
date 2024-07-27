@@ -1,13 +1,16 @@
 import { useAdminOrderList } from "@/api/orders";
+import { useInsertOrderSubscription } from "@/api/orders/subscriptions";
 import OrderListItem from "@/components/OrderListItem";
 import { ActivityIndicator, FlatList, Text } from "react-native";
 
-export default function OrderScreen() {
+export default function OrdersScreen() {
   const {
     data: orders,
     error,
     isLoading,
   } = useAdminOrderList({ archived: false });
+
+  useInsertOrderSubscription();
 
   if (isLoading) {
     return <ActivityIndicator />;

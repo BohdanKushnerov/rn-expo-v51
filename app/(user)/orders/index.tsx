@@ -1,9 +1,12 @@
 import { useMyOrderList } from "@/api/orders";
+import { useUpdateUserOrdersSubscription } from "@/api/orders/subscriptions";
 import OrderListItem from "@/components/OrderListItem";
 import { ActivityIndicator, FlatList, Text } from "react-native";
 
 export default function OrdersScreen() {
   const { data: orders, error, isLoading } = useMyOrderList();
+
+  useUpdateUserOrdersSubscription();
 
   if (isLoading) {
     return <ActivityIndicator />;
