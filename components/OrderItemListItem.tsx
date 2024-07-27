@@ -1,24 +1,24 @@
 import { View, Text, StyleSheet, Image } from "react-native";
-import { IOrderItem } from "@/interfaces/IOrderItem";
 import { defaultPizzaImage } from "@/assets/data/defaultPizzaImage";
 import { Colors } from "@/constants/Colors";
+import { Tables } from "@/database.types";
 
 interface IOrderItemListItemProps {
-  item: IOrderItem;
+  item: { products: Tables<"products"> } & Tables<"order_items">;
 }
 
 export default function OrderItemListItem({ item }: IOrderItemListItemProps) {
   return (
     <View style={styles.container}>
       <Image
-        source={{ uri: item.product.image || defaultPizzaImage }}
+        source={{ uri: item.products.image || defaultPizzaImage }}
         style={styles.image}
         resizeMode="contain"
       />
       <View style={{ flex: 1 }}>
-        <Text style={styles.title}>{item.product.name}</Text>
+        <Text style={styles.title}>{item.products.name}</Text>
         <View style={styles.subtitleContainer}>
-          <Text style={styles.price}>${item.product.price.toFixed(2)}</Text>
+          <Text style={styles.price}>${item.products.price.toFixed(2)}</Text>
           <Text>Size: {item.size}</Text>
         </View>
       </View>

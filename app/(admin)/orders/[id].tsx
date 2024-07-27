@@ -1,23 +1,55 @@
-import { orders } from "@/assets/data/orders";
+import { useOrderDetails, useUpdateOrder } from "@/api/orders";
 import { orderStatusList } from "@/assets/data/orderStatusList";
 import OrderItemListItem from "@/components/OrderItemListItem";
 import OrderListItem from "@/components/OrderListItem";
 import { Colors } from "@/constants/Colors";
+import { OrderStatus } from "@/types/OrderStatus";
 import { Stack, useLocalSearchParams } from "expo-router";
-import { View, Text, FlatList, StyleSheet, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 
 export default function OrderDetailsScreen() {
-  const { id } = useLocalSearchParams();
+  const { id: idString } = useLocalSearchParams();
 
-  const order = orders.find((o) => o.id.toString() === id);
-
-  if (!order) {
-    return <Text>Order not found!</Text>;
+  if (!idString) {
+    return <Text>Invalid product ID</Text>;
   }
+
+  const id = parseFloat(typeof idString === "string" ? idString : idString[0]);
+
+  const { data: order, error, isLoading } = useOrderDetails(id);
+  const {
+    mutate: updateOrder,
+    error: updateOrderError,
+    isPending: isUpdatingOrder,
+  } = useUpdateOrder();
+
+  if (isLoading) {
+    return <ActivityIndicator />;
+  }
+
+  if (error || !order) {
+    return <Text>Failed to fetch order</Text>;
+  }
+
+  const updateOrderStatus = (status: OrderStatus) => {
+    updateOrder({
+      id,
+      status,
+    });
+  };
 
   return (
     <View style={styles.container}>
-      <Stack.Screen options={{ title: `Order #${order.id}` }} />
+      <Stack.Screen options={{ title: `Order #${id}` }} />
+
+      {updateOrderError && <Text>Error updating status</Text>}
 
       <FlatList
         data={order.order_items}
@@ -31,7 +63,8 @@ export default function OrderDetailsScreen() {
               {orderStatusList.map((status) => (
                 <Pressable
                   key={status}
-                  onPress={() => console.warn("Update status")}
+                  onPress={() => updateOrderStatus(status)}
+                  disabled={isUpdatingOrder}
                   style={{
                     borderColor: Colors.light.tint,
                     borderWidth: 1,
@@ -42,6 +75,7 @@ export default function OrderDetailsScreen() {
                       order.status === status
                         ? Colors.light.tint
                         : "transparent",
+                    flexDirection: "row",
                   }}
                 >
                   <Text
@@ -52,6 +86,9 @@ export default function OrderDetailsScreen() {
                   >
                     {status}
                   </Text>
+                  {isUpdatingOrder && order.status === status && (
+                    <ActivityIndicator />
+                  )}
                 </Pressable>
               ))}
             </View>

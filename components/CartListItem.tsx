@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, Pressable } from "react-native";
+import { View, Text, StyleSheet, Image } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import { ICartItem } from "@/interfaces/ICartItem";
@@ -15,15 +15,15 @@ export default function CartListItem({ cartItem }: CartListItemProps) {
   return (
     <View style={styles.container}>
       <Image
-        source={{ uri: cartItem.product.image || defaultPizzaImage }}
+        source={{ uri: cartItem.products.image || defaultPizzaImage }}
         style={styles.image}
         resizeMode="contain"
       />
 
       <View style={{ flex: 1 }}>
-        <Text style={styles.title}>{cartItem.product.name}</Text>
+        <Text style={styles.title}>{cartItem.products.name}</Text>
         <View style={styles.subtitleContainer}>
-          <Text style={styles.price}>${cartItem.product.price.toFixed(2)}</Text>
+          <Text style={styles.price}>${cartItem.products.price.toFixed(2)}</Text>
           <Text>Size: {cartItem.size}</Text>
         </View>
       </View>
