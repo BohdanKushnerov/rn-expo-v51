@@ -112,13 +112,15 @@ export default function CreateProductScreen() {
     );
   };
 
-  const onUpdate = () => {
+  const onUpdate = async () => {
     if (!validateInput()) {
       return;
     }
 
+    const imagePath = await uploadImage();
+
     updateProduct(
-      { id, name, price: parseFloat(price), image },
+      { id, name, price: parseFloat(price), image: imagePath },
       {
         onSuccess() {
           resetFields();
@@ -157,9 +159,6 @@ export default function CreateProductScreen() {
     const { data, error } = await supabase.storage
       .from("product-images")
       .upload(filePath, decode(base64), { contentType });
-
-    console.log("data", data);
-    console.log("error", error);
 
     if (data) {
       return data.path;

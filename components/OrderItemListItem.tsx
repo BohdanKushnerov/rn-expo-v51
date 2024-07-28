@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, Image } from "react-native";
 import { defaultPizzaImage } from "@/assets/data/defaultPizzaImage";
 import { Colors } from "@/constants/Colors";
 import { Tables } from "@/database.types";
+import RemoteImage from "./RemoteImage";
 
 interface IOrderItemListItemProps {
   item: { products: Tables<"products"> } & Tables<"order_items">;
@@ -10,8 +11,9 @@ interface IOrderItemListItemProps {
 export default function OrderItemListItem({ item }: IOrderItemListItemProps) {
   return (
     <View style={styles.container}>
-      <Image
-        source={{ uri: item.products.image || defaultPizzaImage }}
+      <RemoteImage
+        path={item.products.image}
+        fallback={defaultPizzaImage}
         style={styles.image}
         resizeMode="contain"
       />

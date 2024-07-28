@@ -6,7 +6,10 @@ export default function ProfileScreen() {
   return (
     <View>
       <Text>ProfileScreen</Text>
-      <Button onPress={() => supabase.auth.signOut()} text="Sign out" />
+      <Button
+        onPress={async () => await supabase.auth.signOut()}
+        text="Sign out"
+      />
     </View>
   );
 }

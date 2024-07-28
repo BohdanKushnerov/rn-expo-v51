@@ -4,6 +4,7 @@ import { Colors } from "@/constants/Colors";
 import { ICartItem } from "@/interfaces/ICartItem";
 import { defaultPizzaImage } from "@/assets/data/defaultPizzaImage";
 import { useCart } from "@/providers/CartProvider";
+import RemoteImage from "./RemoteImage";
 
 type CartListItemProps = {
   cartItem: ICartItem;
@@ -16,18 +17,16 @@ export default function CartListItem({ cartItem }: CartListItemProps) {
 
   return (
     <View style={styles.container}>
-      <Image
-        source={{ uri: cartItem.product.image || defaultPizzaImage }}
+      <RemoteImage
+        path={cartItem.product.image}
+        fallback={defaultPizzaImage}
         style={styles.image}
-        resizeMode="contain"
       />
 
       <View style={{ flex: 1 }}>
         <Text style={styles.title}>{cartItem.product.name}</Text>
         <View style={styles.subtitleContainer}>
-          <Text style={styles.price}>
-            ${cartItem.product.price.toFixed(2)}
-          </Text>
+          <Text style={styles.price}>${cartItem.product.price.toFixed(2)}</Text>
           <Text>Size: {cartItem.size}</Text>
         </View>
       </View>
@@ -65,6 +64,7 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
     alignSelf: "center",
     marginRight: 10,
+    borderRadius: 50,
   },
   title: {
     fontWeight: "500",
