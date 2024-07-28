@@ -2,6 +2,7 @@ import { Image, Pressable, StyleSheet, Text } from "react-native";
 import { Link, useSegments } from "expo-router";
 import { defaultPizzaImage } from "@/assets/data/defaultPizzaImage";
 import { Product } from "@/types/Product";
+import RemoteImage from "./RemoteImage";
 
 interface IProductItemProps {
   product: Product;
@@ -13,8 +14,9 @@ export default function ProductItem({ product }: IProductItemProps) {
   return (
     <Link href={`${segments[0]}/menu/${product.id}`} asChild>
       <Pressable style={styles.container}>
-        <Image
-          source={{ uri: product.image || defaultPizzaImage }}
+        <RemoteImage
+          path={product.image}
+          fallback={defaultPizzaImage}
           style={styles.image}
         />
         <Text style={styles.title}>{product.name}</Text>

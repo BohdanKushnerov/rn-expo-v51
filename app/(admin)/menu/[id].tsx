@@ -19,6 +19,7 @@ import {
 } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { useProduct } from "@/api/products";
+import RemoteImage from "@/components/RemoteImage";
 
 export default function ProductDetailsScreen() {
   const { id: idString } = useLocalSearchParams();
@@ -83,8 +84,13 @@ export default function ProductDetailsScreen() {
       />
       <Stack.Screen options={{ title: product?.name }} />
 
-      <Image
+      {/* <Image
         source={{ uri: product.image || defaultPizzaImage }}
+        style={styles.image}
+      /> */}
+      <RemoteImage
+        path={product.image}
+        fallback={defaultPizzaImage}
         style={styles.image}
       />
 

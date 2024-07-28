@@ -18,6 +18,10 @@ import {
   useProduct,
   useUpdateProduct,
 } from "@/api/products";
+import * as FileSystem from "expo-file-system";
+import { randomUUID } from "expo-crypto";
+import { supabase } from "@/lib/supabase";
+import { decode } from "base64-arraybuffer";
 
 export default function CreateProductScreen() {
   const [name, setName] = useState("");
@@ -90,13 +94,15 @@ export default function CreateProductScreen() {
     }
   };
 
-  const onCreate = () => {
+  const onCreate = async () => {
     if (!validateInput()) {
       return;
     }
 
+    const imagePath = await uploadImage();
+
     insertProduct(
-      { name, price: parseFloat(price), image },
+      { name, price: parseFloat(price), image: imagePath },
       {
         onSuccess() {
           resetFields();
@@ -136,6 +142,28 @@ export default function CreateProductScreen() {
       { text: "Cancel" },
       { text: "Delete", style: "destructive", onPress: onDelete },
     ]);
+  };
+
+  const uploadImage = async () => {
+    if (!image?.startsWith("file://")) {
+      return;
+    }
+
+    const base64 = await FileSystem.readAsStringAsync(image, {
+      encoding: "base64",
+    });
+    const filePath = `${randomUUID()}.png`;
+    const contentType = "image/png";
+    const { data, error } = await supabase.storage
+      .from("product-images")
+      .upload(filePath, decode(base64), { contentType });
+
+    console.log("data", data);
+    console.log("error", error);
+
+    if (data) {
+      return data.path;
+    }
   };
 
   return (

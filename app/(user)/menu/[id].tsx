@@ -15,6 +15,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useProduct } from "@/api/products";
+import RemoteImage from "@/components/RemoteImage";
 
 export default function ProductDetailsScreen() {
   const { id: idString } = useLocalSearchParams();
@@ -38,6 +39,10 @@ export default function ProductDetailsScreen() {
     router.push("/cart");
   };
 
+  if (!product) {
+    return <Text>Product not found</Text>;
+  }
+
   if (isLoading) {
     return <ActivityIndicator />;
   }
@@ -53,8 +58,13 @@ export default function ProductDetailsScreen() {
     >
       <Stack.Screen options={{ title: product?.name }} />
 
-      <Image
+      {/* <Image
         source={{ uri: product.image || defaultPizzaImage }}
+        style={styles.image}
+      /> */}
+      <RemoteImage
+        path={product.image}
+        fallback={defaultPizzaImage}
         style={styles.image}
       />
 
