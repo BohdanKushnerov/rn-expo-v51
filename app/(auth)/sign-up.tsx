@@ -18,6 +18,8 @@ export default function signUn() {
       password,
     });
 
+    console.log("error", error);
+
     if (error) Alert.alert(error.message);
     setLoading(false);
   };
