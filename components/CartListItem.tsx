@@ -13,8 +13,6 @@ type CartListItemProps = {
 export default function CartListItem({ cartItem }: CartListItemProps) {
   const { updateQuantity } = useCart();
 
-  console.log("cartItem", cartItem);
-
   return (
     <View style={styles.container}>
       <RemoteImage

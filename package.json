@@ -17,6 +17,7 @@
     "@react-native-async-storage/async-storage": "^1.24.0",
     "@react-navigation/material-top-tabs": "^6.6.14",
     "@react-navigation/native": "^6.0.2",
+    "@stripe/stripe-react-native": "^0.38.3",
     "@supabase/supabase-js": "^2.44.4",
     "@tanstack/react-query": "^5.51.11",
     "base64-arraybuffer": "^1.0.2",
