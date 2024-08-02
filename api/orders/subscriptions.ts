@@ -12,7 +12,7 @@ export const useInsertOrderSubscription = () => {
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "orders" },
         (payload) => {
-          console.log("Change received!", payload);
+          // console.log("Change received!", payload);
           queryClient.invalidateQueries({ queryKey: ["orders"] });
         }
       )
@@ -34,7 +34,7 @@ export const useUpdateUserOrdersSubscription = () => {
         "postgres_changes",
         { event: "UPDATE", schema: "public", table: "orders" },
         (payload) => {
-          console.log("Change received!", payload);
+          // console.log("Change received!", payload);
           queryClient.invalidateQueries({ queryKey: ["orders"] });
         }
       )
@@ -61,7 +61,7 @@ export const useUpdateOrderSubscription = (id: number) => {
           filter: `id=eq.${id}`,
         },
         (payload) => {
-          console.log("Change received!", payload);
+          // console.log("Change received!", payload);
           queryClient.invalidateQueries({ queryKey: ["orders", id] });
         }
       )

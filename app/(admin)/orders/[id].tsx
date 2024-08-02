@@ -3,6 +3,7 @@ import { orderStatusList } from "@/assets/data/orderStatusList";
 import OrderItemListItem from "@/components/OrderItemListItem";
 import OrderListItem from "@/components/OrderListItem";
 import { Colors } from "@/constants/Colors";
+import { notifyUserAboutOrderUpdate } from "@/lib/notifications";
 import { OrderStatus } from "@/types/OrderStatus";
 import { Stack, useLocalSearchParams } from "expo-router";
 import {
@@ -38,11 +39,15 @@ export default function OrderDetailsScreen() {
     return <Text>Failed to fetch order</Text>;
   }
 
-  const updateOrderStatus = (status: OrderStatus) => {
+  const updateOrderStatus = async (status: OrderStatus) => {
     updateOrder({
       id,
       status,
     });
+
+    if (order) {
+      await notifyUserAboutOrderUpdate(order, status);
+    }
   };
 
   return (
